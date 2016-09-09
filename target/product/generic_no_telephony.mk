@@ -21,7 +21,6 @@ PRODUCT_PACKAGES := \
     Bluetooth \
     BluetoothMidiService \
     Camera2 \
-    Eleven \
     Gallery2 \
     MusicFX \
     OneTimeInitializer \
