@@ -631,10 +631,11 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.AppendExtra("ifelse(is_mounted(\"/system\"), unmount(\"/system\"));")
   device_specific.FullOTA_InstallBegin()
 
-  CopyInstallTools(output_zip)
-  script.UnpackPackageDir("install", "/tmp/install")
-  script.SetPermissionsRecursive("/tmp/install", 0, 0, 0o755, 0o644, None, None)
-  script.SetPermissionsRecursive("/tmp/install/bin", 0, 0, 0o755, 0o755, None, None)
+  if OPTIONS.backuptool:
+    CopyInstallTools(output_zip)
+    script.UnpackPackageDir("install", "/tmp/install")
+    script.SetPermissionsRecursive("/tmp/install", 0, 0, 0o755, 0o644, None, None)
+    script.SetPermissionsRecursive("/tmp/install/bin", 0, 0, 0o755, 0o755, None, None)
 
   if OPTIONS.backuptool:
     script.Mount("/system")
@@ -722,7 +723,6 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     if block_based:
       script.Unmount("/system")
 
-  script.Print(" ")
   script.Print("Flashing Kernel..")
   script.ShowProgress(0.05, 5)
   script.WriteRawImage("/boot", "boot.img")

@@ -395,18 +395,9 @@ ifneq (,$(user_variant))
   # Target is secure in user builds.
   ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=1
   ADDITIONAL_DEFAULT_PROPERTIES += security.perf_harden=1
+  ADDITIONAL_DEFAULT_PROPERTIES += ro.adb.secure=1
 
-  ifeq ($(user_variant),user)
-    ADDITIONAL_DEFAULT_PROPERTIES += ro.adb.secure=1
-  endif
-
-  ifeq ($(user_variant),userdebug)
-    # Pick up some extra useful tools
-    tags_to_install += debug
-  else
-    # Disable debugging in plain user builds.
-    enable_target_debugging :=
-  endif
+  # Debugging is enabled in all user builds.
 
   # Disallow mock locations by default for user builds
   ADDITIONAL_DEFAULT_PROPERTIES += ro.allow.mock.location=0
@@ -423,13 +414,15 @@ endif # !user_variant
 ifeq (true,$(strip $(enable_target_debugging)))
   # Target is more debuggable and adbd is on by default
   ADDITIONAL_DEFAULT_PROPERTIES += ro.debuggable=1
+  ifeq ($(TARGET_BUILD_VARIANT),eng)
   # Enable Dalvik lock contention logging.
   ADDITIONAL_BUILD_PROPERTIES += dalvik.vm.lockprof.threshold=500
+  endif
   # Include the debugging/testing OTA keys in this build.
   INCLUDE_TEST_OTA_KEYS := true
 else # !enable_target_debugging
   # Target is less debuggable and adbd is off by default
-  ADDITIONAL_DEFAULT_PROPERTIES += ro.debuggable=1
+  ADDITIONAL_DEFAULT_PROPERTIES += ro.debuggable=0
 endif # !enable_target_debugging
 
 ## eng ##
